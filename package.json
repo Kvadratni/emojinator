@@ -1,15 +1,15 @@
 {
   "name": "emojinator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Browse, search, and bulk upload custom emojis to Slack",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["slack", "emoji", "upload", "bulk"],
+  "author": "Max Novich",
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "next": "^16.2.1",

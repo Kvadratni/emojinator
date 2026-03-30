@@ -5,3 +5,5 @@ next-env.d.ts
 images/
 *.zip
 .DS_Store
+.claude/plans/
+.claude/settings.local.json
