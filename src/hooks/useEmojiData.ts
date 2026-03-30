@@ -68,7 +68,7 @@ export function useEmojiData() {
     [fetchEmojis]
   );
 
-  const fetchExistingEmojis = useCallback(async () => {
+  const fetchExistingEmojis = useCallback(async (forceRefresh = false) => {
     setFetchingExisting(true);
     try {
       const profile = localStorage.getItem("emojinator_profile");
@@ -82,6 +82,25 @@ export function useEmojiData() {
         return;
       }
 
+      // Check cache first
+      const cacheKey = `emojinator_existing_${team}`;
+      if (!forceRefresh) {
+        try {
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            const { emojis: cachedEmojis, timestamp } = JSON.parse(cached);
+            // Use cache if less than 1 hour old
+            if (Date.now() - timestamp < 3600000) {
+              setExistingEmojis(new Set(cachedEmojis));
+              setFetchingExisting(false);
+              return;
+            }
+          }
+        } catch {
+          // ignore cache errors
+        }
+      }
+
       const res = await fetch("/api/existing-emojis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,6 +109,11 @@ export function useEmojiData() {
       const data = await res.json();
       if (data.emojis) {
         setExistingEmojis(new Set(data.emojis));
+        // Cache per team
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ emojis: data.emojis, timestamp: Date.now() })
+        );
       }
     } catch {
       // silently fail
@@ -143,6 +167,7 @@ export function useEmojiData() {
     handleDirectoryChange,
     hideUploaded,
     handleToggleHideUploaded,
+    refreshExistingEmojis: () => fetchExistingEmojis(true),
     existingEmojis,
     fetchingExisting,
   };
