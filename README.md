@@ -4,6 +4,8 @@ Browse, search, and bulk upload custom emojis to Slack.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![License](https://img.shields.io/badge/License-MIT-green)
 
+![Emojinator Screenshot](docs/screenshot.png)
+
 ## Features
 
 - **Browse** thousands of emojis in a virtualized grid (handles 90k+ images)
