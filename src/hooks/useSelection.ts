@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 
 export function useSelection() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -35,9 +35,13 @@ export function useSelection() {
 
   const clear = useCallback(() => setSelected(new Set()), []);
 
+  // Use a ref so the function identity is stable — prevents Grid re-renders
+  const selectedRef = useRef(selected);
+  selectedRef.current = selected;
+
   const isSelected = useCallback(
-    (filename: string) => selected.has(filename),
-    [selected]
+    (filename: string) => selectedRef.current.has(filename),
+    []
   );
 
   const count = selected.size;

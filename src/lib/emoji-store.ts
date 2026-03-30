@@ -1,6 +1,7 @@
 export interface Emoji {
   filename: string;
   name: string;
+  slackName: string; // pre-sanitized name for Slack matching
   ext: string;
   prefix: string;
 }

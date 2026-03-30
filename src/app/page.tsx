@@ -29,6 +29,7 @@ export default function Home() {
     refreshExistingEmojis,
     existingEmojis,
     fetchingExisting,
+    isPending,
   } = useEmojiData();
 
   const {
@@ -149,6 +150,7 @@ export default function Home() {
 
       {loading && <Spinner message="Scanning emojis..." />}
       {fetchingExisting && <Spinner message="Fetching existing emojis from Slack..." />}
+      {isPending && <Spinner message="Filtering emojis..." />}
     </div>
   );
 }

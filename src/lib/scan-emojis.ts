@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { detectPrefixes } from "./prefix-detector";
 import { getEmojiDir } from "./config";
+import { sanitizeEmojiName } from "./emoji-store";
 import type { Emoji, EmojiGroup, EmojiIndex } from "./emoji-store";
 
 const VALID_EXTENSIONS = new Set([".png", ".gif", ".jpg", ".jpeg", ".webp"]);
@@ -31,7 +32,7 @@ export function scanEmojis(): EmojiIndex {
 
     const name = file.slice(0, -ext.length);
     filenames.push(name);
-    emojis.push({ filename: file, name, ext, prefix: "" });
+    emojis.push({ filename: file, name, slackName: sanitizeEmojiName(name), ext, prefix: "" });
   }
 
   const prefixMap = detectPrefixes(filenames);

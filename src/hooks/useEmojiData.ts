@@ -1,16 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
 import type { Emoji, EmojiIndex } from "@/lib/emoji-store";
-
-function sanitizeEmojiName(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 100);
-}
 
 export function useEmojiData() {
   const [data, setData] = useState<EmojiIndex | null>(null);
@@ -24,6 +15,7 @@ export function useEmojiData() {
     null
   );
   const [fetchingExisting, setFetchingExisting] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const fetchEmojis = useCallback(() => {
     setLoading(true);
@@ -123,12 +115,15 @@ export function useEmojiData() {
 
   const handleToggleHideUploaded = useCallback(
     (enabled: boolean) => {
-      setHideUploaded(enabled);
       if (enabled && !existingEmojis) {
         fetchExistingEmojis();
       }
+      // Use transition so filtering 90k items doesn't block the UI
+      startTransition(() => {
+        setHideUploaded(enabled);
+      });
     },
-    [existingEmojis, fetchExistingEmojis]
+    [existingEmojis, fetchExistingEmojis, startTransition]
   );
 
   const filtered = useMemo(() => {
@@ -145,9 +140,7 @@ export function useEmojiData() {
     }
 
     if (hideUploaded && existingEmojis) {
-      result = result.filter(
-        (e) => !existingEmojis.has(sanitizeEmojiName(e.name))
-      );
+      result = result.filter((e) => !existingEmojis.has(e.slackName));
     }
 
     return result;
@@ -160,9 +153,11 @@ export function useEmojiData() {
     loading,
     error,
     activeGroup,
-    setActiveGroup,
+    setActiveGroup: (group: string | null) =>
+      startTransition(() => setActiveGroup(group)),
     searchQuery,
-    setSearchQuery,
+    setSearchQuery: (q: string) =>
+      startTransition(() => setSearchQuery(q)),
     emojiDir,
     handleDirectoryChange,
     hideUploaded,
@@ -170,5 +165,6 @@ export function useEmojiData() {
     refreshExistingEmojis: () => fetchExistingEmojis(true),
     existingEmojis,
     fetchingExisting,
+    isPending,
   };
 }
