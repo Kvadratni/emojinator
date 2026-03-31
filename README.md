@@ -28,6 +28,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) and use the folder icon in the header to point to your emoji directory.
 
+> **Tip:** If you use `min-release-age` in `~/.npmrc` or `exclude-newer` in `~/.config/uv/uv.toml`, make sure packages aren't being blocked. This project uses recent versions of Next.js 16, React 19, and react-window 2.
+
 ## Getting Slack Credentials
 
 To upload emojis, you need three things from your Slack workspace:
