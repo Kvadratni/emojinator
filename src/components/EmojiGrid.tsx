@@ -12,6 +12,7 @@ interface Props {
   emojis: Emoji[];
   isSelected: (filename: string) => boolean;
   onToggle: (filename: string) => void;
+  selectionVersion: number;
 }
 
 interface CellExtra {
@@ -19,6 +20,7 @@ interface CellExtra {
   columnCount: number;
   isSelected: (filename: string) => boolean;
   onToggle: (filename: string) => void;
+  _v: number; // selection version — forces cell re-render
 }
 
 function CellComponent(props: CellComponentProps<CellExtra>) {
@@ -37,7 +39,7 @@ function CellComponent(props: CellComponentProps<CellExtra>) {
   );
 }
 
-export function EmojiGrid({ emojis, isSelected, onToggle }: Props) {
+export function EmojiGrid({ emojis, isSelected, onToggle, selectionVersion }: Props) {
   const [width, setWidth] = useState(800);
 
   const handleResize = useCallback(
@@ -51,8 +53,8 @@ export function EmojiGrid({ emojis, isSelected, onToggle }: Props) {
   const rowCount = Math.ceil(emojis.length / columnCount);
 
   const cellProps = useMemo(
-    () => ({ emojis, columnCount, isSelected, onToggle }),
-    [emojis, columnCount, isSelected, onToggle]
+    () => ({ emojis, columnCount, isSelected, onToggle, _v: selectionVersion }),
+    [emojis, columnCount, isSelected, onToggle, selectionVersion]
   );
 
   if (emojis.length === 0) {

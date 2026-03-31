@@ -39,6 +39,7 @@ export default function Home() {
     clear,
     isSelected,
     count,
+    selectionVersion,
     filenames: selectedFilenames,
   } = useSelection();
 
@@ -127,6 +128,7 @@ export default function Home() {
               emojis={emojis}
               isSelected={isSelected}
               onToggle={toggle}
+              selectionVersion={selectionVersion}
             />
           </main>
         </div>

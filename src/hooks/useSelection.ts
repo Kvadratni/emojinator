@@ -35,7 +35,8 @@ export function useSelection() {
 
   const clear = useCallback(() => setSelected(new Set()), []);
 
-  // Use a ref so the function identity is stable — prevents Grid re-renders
+  // Stable callback via ref, but expose a version counter so
+  // the Grid knows to re-render cells when selection changes
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
 
@@ -45,7 +46,9 @@ export function useSelection() {
   );
 
   const count = selected.size;
+  // Changes on every selection mutation — used to bust Grid memoization
+  const selectionVersion = useMemo(() => Math.random(), [selected]);
   const filenames = useMemo(() => Array.from(selected), [selected]);
 
-  return { selected, toggle, selectAll, deselectAll, clear, isSelected, count, filenames };
+  return { selected, toggle, selectAll, deselectAll, clear, isSelected, count, selectionVersion, filenames };
 }
