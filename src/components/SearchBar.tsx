@@ -14,7 +14,7 @@ export function SearchBar({ value, onChange }: Props) {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
       if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => onChange(val), 200);
+      timerRef.current = setTimeout(() => onChange(val), 500);
     },
     [onChange]
   );
